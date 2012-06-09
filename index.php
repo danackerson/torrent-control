@@ -85,7 +85,11 @@ $trans_cmd = $_GET["transmission"];
     <div id="header">
       <form action="." method="get">
         Search term: <input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
-        <input type="submit" value="Submit" />&nbsp;&nbsp;(<a href=".">refresh</a>)
+<a href="."><img width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:4px;' src='./images/clear.png'></a>
+<input type="submit" value="Submit" />&nbsp;&nbsp;
+<a href="./?q=<?=$q?>">
+<img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.jpeg'>
+</a>
       </form>
       <hr/>
 <?
@@ -117,7 +121,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
       $bkgrd_color = 'white';
       if ($i % 2 == 0) $bkgrd_color = 'wheat';
       echo "<span style='padding:2px;display:block;background-color:{$bkgrd_color};'>";
-      echo "<a href='?xt={$hash}'>{$name}</a>&nbsp;&nbsp;";
+      echo "<a href='?xt={$hash}&q={$q}'>{$name}</a>&nbsp;&nbsp;";
 
     	$spans = $result->getElementsByTagName('span');
     	foreach ($spans as $span) {
@@ -138,8 +142,10 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
       $i++;
     }
   }
-# Else a torrent was added!
-} else if (!is_null($xt)) {
+} 
+
+# A torrent was added!
+if (!is_null($xt)) {
   $uri = "magnet:?xt=urn:btih:".$xt;
 
   system("transmission-remote -a ${uri}");
@@ -158,6 +164,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
 
     system("transmission-remote -t {$id} {$cmd}");
 }
+
 ?>
       </div>
       <div id="floater">
@@ -204,18 +211,18 @@ function torrent_list_info() {
 
     $bkgrd_color = 'skyBlue';
     if ($i % 2 == 0) $bkgrd_color = 'lightSteelBlue';
-    
+    $q = $_GET["q"];
     echo "<span style='background-color:{$bkgrd_color};display:block;'>";
-    $action_icon_id ="<a href='?transmission={$toggle_cmd}&id={$id}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
+    $action_icon_id ="<a href='?transmission={$toggle_cmd}&id={$id}&q={$q}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
     $row = preg_replace("/{$id}/", $action_icon_id, $row, 1); 
-    echo $row . "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id={$id}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a><br/>";
+    echo $row . "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id={$id}&q={$q}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a><br/>";
     echo "</span>";
     $ids[] = $id;
     $i++;
   }
-  echo "<br/><a href='?transmission=stop&id=".implode(',', $ids)."'>Stop all</a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."'>Start all</a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."'>Remove all</a>";
+  echo "<br/><a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'>Stop all</a>";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'>Start all</a>";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'>Remove all</a>";
 }
 
 ?>
