@@ -204,9 +204,10 @@ function torrent_list_info() {
 
     $bkgrd_color = 'skyBlue';
     if ($i % 2 == 0) $bkgrd_color = 'lightSteelBlue';
-      
+    
     echo "<span style='background-color:{$bkgrd_color};display:block;'>";
-    $row = str_replace($id, "<a href='?transmission={$toggle_cmd}&id={$id}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>", $row);
+    $action_icon_id ="<a href='?transmission={$toggle_cmd}&id={$id}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
+    $row = preg_replace("/{$id}/", $action_icon_id, $row, 1); 
     echo $row . "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id={$id}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a><br/>";
     echo "</span>";
     $ids[] = $id;
