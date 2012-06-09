@@ -72,7 +72,7 @@ $trans_cmd = $_GET["transmission"];
       padding:5px 10px;
       bottom:5px;
       width:30%;
-      height:200px; /* Height of the footer */
+      height:400px; /* Height of the footer */
       background:lightCoral; /*Background color */
       overflow:scroll;
       }
@@ -99,6 +99,28 @@ torrent_list_info();
     </div>
     <div id="body">
 <?
+
+# A torrent was added!
+if (!is_null($xt)) {
+  $uri = "magnet:?xt=urn:btih:".$xt;
+
+  system("transmission-remote -a ${uri}");
+# Else a transmission cmd was invoked - Execute!
+} else if (!is_null($trans_cmd)) {
+    $id = $_GET["id"];
+    $cmd = '-l';
+
+    if ($trans_cmd == 'stop') {
+      $cmd = "-S";
+    } else if ($trans_cmd == 'start') {
+      $cmd = "-s";
+    } else if ($trans_cmd == 'remove') {
+      $cmd = "-r";
+    }
+
+    system("transmission-remote -t {$id} {$cmd}");
+}
+
 # A search was made! Show results...
 if (!is_null($q) && strlen(trim($q)) > 0) {
   # TODO : https does NOT work here!!
@@ -143,27 +165,6 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     }
   }
 } 
-
-# A torrent was added!
-if (!is_null($xt)) {
-  $uri = "magnet:?xt=urn:btih:".$xt;
-
-  system("transmission-remote -a ${uri}");
-# Else a transmission cmd was invoked - Execute!
-} else if (!is_null($trans_cmd)) {
-    $id = $_GET["id"];
-    $cmd = '-l';
-
-    if ($trans_cmd == 'stop') {
-      $cmd = "-S";
-    } else if ($trans_cmd == 'start') {
-      $cmd = "-s";
-    } else if ($trans_cmd == 'remove') {
-      $cmd = "-r";
-    }
-
-    system("transmission-remote -t {$id} {$cmd}");
-}
 
 ?>
       </div>
@@ -220,9 +221,9 @@ function torrent_list_info() {
     $ids[] = $id;
     $i++;
   }
-  echo "<br/><a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'>Stop all</a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'>Start all</a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'>Remove all</a>";
+  echo "<br/>Global commands:&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
 }
 
 ?>
