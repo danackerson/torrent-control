@@ -2,6 +2,7 @@
 $q = $_GET["q"];
 $xt = $_GET["xt"];
 $trans_cmd = $_GET["transmission"];
+$id = $_GET["id"];
 ?>
 
 <html>
@@ -85,29 +86,16 @@ $trans_cmd = $_GET["transmission"];
     <div id="header">
       <form action="." method="get">
         Search term: <input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
-<a href="."><img width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:4px;' src='./images/clear.png'></a>
+<a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:4px;' src='./images/clear.png'></a>
 <input type="submit" value="Submit" />&nbsp;&nbsp;
 <a href="./?q=<?=$q?>">
-<img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.jpeg'>
+<img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.png'>
 </a>
       </form>
       <hr/>
 <?
-torrent_list_info();
-?>
-      <hr/>
-    </div>
-    <div id="body">
-<?
-
-# A torrent was added!
-if (!is_null($xt)) {
-  $uri = "magnet:?xt=urn:btih:".$xt;
-
-  system("transmission-remote -a ${uri}");
-# Else a transmission cmd was invoked - Execute!
-} else if (!is_null($trans_cmd)) {
-    $id = $_GET["id"];
+# a transmission cmd was invoked - Execute!
+if (!is_null($trans_cmd)) {
     $cmd = '-l';
 
     if ($trans_cmd == 'stop') {
@@ -120,7 +108,16 @@ if (!is_null($xt)) {
 
     system("transmission-remote -t {$id} {$cmd}");
 }
-
+if (!is_null($xt)) {
+  $uri = "magnet:?xt=urn:btih:".$xt;
+  system("transmission-remote -a ${uri}");
+}
+torrent_list_info();
+?>
+      <hr/>
+    </div>
+    <div id="body">
+<?
 # A search was made! Show results...
 if (!is_null($q) && strlen(trim($q)) > 0) {
   # TODO : https does NOT work here!!
@@ -195,13 +192,15 @@ function torrent_list_info() {
     fclose($handle);
   }
 
-  echo "<p>".str_replace(' ', "&nbsp;", "  ID     Done       Have  ETA           Up    Down  Ratio  Status       Name<br/>")."</p>";
-  $pattern = "/^(&nbsp;)+(?<digit>\d+)&nbsp;/";
+  echo "<p style='color:white;'>".str_replace(' ', "&nbsp;", "  ID     Done       Have  ETA           Up    Down  Ratio  Status       Name<br/>")."</p>";
+  $pattern = "/^(&nbsp;)+(?<id>\d+)(&nbsp;)+(?<percentage>\d+%|n\/a)(&nbsp;)+/";
   $ids = array();
+  $finished_ids = array();
   $i = 0;
   foreach ($rows as $row) {
     preg_match($pattern, $row, $matches);
-    $id = $matches[digit];
+    $id = $matches[id];
+    $percentage = $matches[percentage] == null ? '0' : $matches[percentage];
 
     $toggle_cmd = 'stop';
     $toggle_img = 'stop.gif';
@@ -211,9 +210,16 @@ function torrent_list_info() {
     }
 
     $bkgrd_color = 'skyBlue';
+    $text_color = 'black';
+
     if ($i % 2 == 0) $bkgrd_color = 'lightSteelBlue';
+    if ($percentage == '100%') {
+      $text_color = 'red';
+      $finished_ids[] = $id;
+    }
+
     $q = $_GET["q"];
-    echo "<span style='background-color:{$bkgrd_color};display:block;'>";
+    echo "<span style='background-color:{$bkgrd_color};color:{$text_color};display:block;'>";
     $action_icon_id ="<a href='?transmission={$toggle_cmd}&id={$id}&q={$q}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
     $row = preg_replace("/{$id}/", $action_icon_id, $row, 1); 
     echo $row . "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id={$id}&q={$q}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a><br/>";
@@ -221,9 +227,10 @@ function torrent_list_info() {
     $ids[] = $id;
     $i++;
   }
-  echo "<br/>Global commands:&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
+  echo "<br/><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all finished' title='Remove all finished' src='./images/trash.png'></a>";
 }
 
 ?>
