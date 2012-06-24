@@ -3,13 +3,18 @@ $q = $_GET["q"];
 $xt = $_GET["xt"];
 $trans_cmd = $_GET["transmission"];
 $id = $_GET["id"];
+$current_directory = '/mnt/disk/volume1/service/DLNA/torrents';
 ?>
 
 <html>
   <head>
-    <title>Fam Ackerson Torrent Management</title>
+    <title>Fam Ackerson Torrent Mgmt</title>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+    <script type="text/javascript" src="http://github.com/paulirish/jquery-idletimer/raw/master/jquery.idle-timer.js"></script>
+
     <script type="text/javascript">
-      var currentDirectory = '/mnt/disk/volume1/service/DLNA/torrents';
+      var currentDirectory = '<?=$current_directory;?>';
 
       function showCurrentDirectory() {
         currentDirP = document.getElementById("currentDir");
@@ -41,6 +46,16 @@ $id = $_GET["id"];
         currentDirP = document.getElementById("currentDir");
         currentDirP.innerText = currentDirectory;
       }
+
+      (function($){
+          var timeout = 30000;
+
+          $(document).bind("idle.idleTimer", function(){
+            location.reload();
+          });
+
+          $.idleTimer(timeout);
+      })(jQuery);
 
       window.onload = showCurrentDirectory;
     </script>
