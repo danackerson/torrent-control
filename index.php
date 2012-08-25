@@ -125,14 +125,15 @@ if (!is_null($trans_cmd) && !is_null($id)) {
     } else if ($trans_cmd == 'remove') {
       $cmd = "-r";
     }
-
-    echo "<span style='float:left;'>".system("transmission-remote -t {$id} {$cmd}")."</span>";
-
+    
+    $result = shell_exec("transmission-remote -t {$id} {$cmd} 2>&1");
+    echo "<span style='float:left;color:green;'>$result</span>";
 }
 // magnet info hash given
 if (!is_null($xt) && $xt != "") {
-  $uri = "magnet:?xt=urn:btih:".$xt;
-  system("transmission-remote -a ${uri}");
+    $uri = "magnet:?xt=urn:btih:".$xt;
+    $result = shell_exec("transmission-remote -a ${uri} 2>&1");
+    echo "<span style='float:left;color:green;'>$result</span>";
 }
 // torrent file upload
 if (!is_null($file)) {
@@ -143,7 +144,9 @@ if (!is_null($file)) {
         $be = new BEncoded;
         $be->FromFile($file["tmp_name"]);
         $uri = "magnet:?xt=urn:btih:".$be->InfoHash();
-        system("transmission-remote -a ${uri}");  
+
+        $result = shell_exec("transmission-remote -a ${uri} 2>&1");
+        echo "<span style='float:left;color:green;'>$result</span>";
     }
 }
 
