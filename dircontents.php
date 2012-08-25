@@ -13,7 +13,7 @@ if (!is_null($ls)) {
           $full_path = substr($ls, 0, strrpos($ls , "/"));
         }
 
-        echo "<span style='display:block;margin:3px;'><a href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}</a><br/></span>";
+        echo "<span style='display:block;margin:3px;font-weight:bold;'><a href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}/</a><br/></span>";
       } else {
         echo "<span style='display:block;margin:3px;'>{$file}<br/></span>";
       }
