@@ -4,6 +4,7 @@ $xt = $_GET["xt"];
 $trans_cmd = $_GET["transmission"];
 $id = $_GET["id"];
 $current_directory = '/mnt/disk/volume1/service/DLNA/torrents';
+$file = $_FILES["file"];
 ?>
 
 <html>
@@ -98,14 +99,18 @@ $current_directory = '/mnt/disk/volume1/service/DLNA/torrents';
 
 <body>
   <div id="container">
-    <div id="header">
+    <div id="header" style="float:left;clear:both;width:80%;">
       <form action="." method="get">
-        Search term: <input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
+<a href="./?q=<?=$q?>"><img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.png'></a>
+&nbsp;&nbsp;Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
 <a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:4px;' src='./images/clear.png'></a>
-<input type="submit" value="Submit" />&nbsp;&nbsp;
-<a href="./?q=<?=$q?>">
-<img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.png'>
-</a>
+<input type="submit" value="Search" />&nbsp;&nbsp;
+|&nbsp;&nbsp;Magnet Hash:<input type="text" name="xt" value=""/>&nbsp;&nbsp;
+<input type="submit" value="Download" />&nbsp;&nbsp;
+      </form>
+      <form action="." method="post" enctype="multipart/form-data">
+        <label for="file" style="font-style:italic;">.torrent:</label>
+        <input type="file" name="file" id="file" style="background-color:white;" /><input type="submit" name="submit" value="Download" />
       </form>
       <hr/>
 <?
@@ -123,15 +128,29 @@ if (!is_null($trans_cmd)) {
 
     system("transmission-remote -t {$id} {$cmd}");
 }
+// magnet info hash given
 if (!is_null($xt)) {
   $uri = "magnet:?xt=urn:btih:".$xt;
   system("transmission-remote -a ${uri}");
 }
+// torrent file upload
+if (!is_null($file)) {
+    if ($file["error"] > 0) {
+        echo "Error: " . $file["error"] . "<br />";
+    } else {
+        require 'bencoded.php';
+        $be = new BEncoded;
+        $be->FromFile($file["tmp_name"]);
+        $uri = "magnet:?xt=urn:btih:".$be->InfoHash();
+        system("transmission-remote -a ${uri}");  
+    }
+}
+
 torrent_list_info();
 ?>
       <hr/>
     </div>
-    <div id="body">
+    <div id="body" style="float:left;clear:both;width:80%;">
 <?
 # A search was made! Show results...
 if (!is_null($q) && strlen(trim($q)) > 0) {
@@ -144,7 +163,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
   $torrent_hashes = array();
 
   $dom_xpath = new DOMXpath($dom_document);
-  $results = $dom_xpath->query("//dl");
+  $results = $dom_xpath->query("//div[@class='results']/dl");
   if (!is_null($results)) {
     $i = 0;
     foreach ($results as $result) {
@@ -245,7 +264,7 @@ function torrent_list_info() {
   echo "<br/><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all finished' title='Remove all finished' src='./images/trash.png'></a>";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a>";
 }
 
 ?>
