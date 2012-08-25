@@ -93,6 +93,30 @@ $file = $_FILES["file"];
       background:lightCoral; /*Background color */
       overflow:scroll;
       }
+
+      table.running_torrents {
+        border-width: 1px;
+        border-spacing: 2px;
+        border-style: hidden;
+        border-color: black;
+        border-collapse: collapse;
+        background-color: skyBlue;
+        text-align: center;
+      }
+      table.running_torrents th {
+        border-width: 1px;
+        padding: 4px;
+        border-style: inset;
+        border-color: gray;
+        background-color: skyBlue;
+      }
+      table.running_torrents td {
+        border-width: 1px;
+        padding: 4px;
+        border-style: inset;
+        border-color: gray;
+        background-color: white;
+      }
       -->
     </style>
   </head>
@@ -127,7 +151,7 @@ if (!is_null($trans_cmd) && !is_null($id)) {
     }
     
     $result = shell_exec("transmission-remote -t {$id} {$cmd} 2>&1");
-    echo "<span style='float:left;color:green;'>$result</span>";
+    #echo "<span style='float:left;color:green;'>$result</span>";
 }
 // magnet info hash given
 if (!is_null($xt) && $xt != "") {
@@ -203,7 +227,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
 
 ?>
       </div>
-      <div id="floater">
+      <div id="floater"  style="overflow:auto;">
         <span id="currentDir"></span>
         <div id="dirContents">File information</div>
       </div>
@@ -214,61 +238,96 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
 <?
 
 function torrent_list_info() {
-  `transmission-remote -l > /tmp/trans-list.txt`;
-  $handle = @fopen("/tmp/trans-list.txt", "r");
-  $rows = array();
-  if ($handle) {
-    while (($buffer = fgets($handle, 4096)) !== false) {
-      if (stripos($buffer, "ID", 0) === 0) continue;
-      if (stripos($buffer, "Sum", 0) === 0) continue;
-      $rows[] = str_replace (' ', "&nbsp;", $buffer);
-    }
-    if (!feof($handle)) {
-      echo "Error: unexpected fgets() fail\n";
-    }
+    `transmission-remote -l > /tmp/trans-list.txt`;
+    $handle = @fopen("/tmp/trans-list.txt", "r");
+    $rows = array();
+    if ($handle) {
+        while (($buffer = fgets($handle, 4096)) !== false) {
+            if (stripos($buffer, "ID", 0) === 0) continue;
+            if (stripos($buffer, "Sum", 0) === 0) continue;
+            $rows[] = str_replace (' ', "&nbsp;", $buffer);
+        }
 
-    fclose($handle);
-  }
+        if (!feof($handle)) {
+            echo "Error: unexpected fgets() fail\n";
+        }
 
-  echo "<p style='color:white;float:left;clear:both;'>".str_replace(' ', "&nbsp;", "  ID     Done       Have  ETA           Up    Down  Ratio  Status       Name<br/>")."</p>";
-  $pattern = "/^(&nbsp;)+(?<id>\d+)(&nbsp;)+(?<percentage>\d+%|n\/a)(&nbsp;)+/";
-  $ids = array();
-  $finished_ids = array();
-  $i = 0;
-  foreach ($rows as $row) {
-    preg_match($pattern, $row, $matches);
-    $id = $matches[id];
-    $percentage = $matches[percentage] == null ? '0' : $matches[percentage];
-
-    $toggle_cmd = 'stop';
-    $toggle_img = 'stop.gif';
-    if (strstr($row, "Stopped")) {
-      $toggle_cmd = 'start';
-      $toggle_img = 'play.jpeg';
+        fclose($handle);
     }
 
-    $bkgrd_color = 'skyBlue';
-    $text_color = 'black';
+    $ids = array();
+    $finished_ids = array();
+    running_torrents($rows, $ids, $finished_ids);
 
-    if ($i % 2 == 0) $bkgrd_color = 'lightSteelBlue';
-    if ($percentage == '100%') {
-      $text_color = 'red';
-      $finished_ids[] = $id;
-    }
-
-    $q = $_GET["q"];
-    echo "<span style='background-color:{$bkgrd_color};color:{$text_color};display:block;float:left;clear:both;'>";
-    $action_icon_id ="<a href='?transmission={$toggle_cmd}&id={$id}&q={$q}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
-    $row = preg_replace("/{$id}/", $action_icon_id, $row, 1); 
-    echo $row . "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id={$id}&q={$q}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a><br/>";
-    echo "</span>";
-    $ids[] = $id;
-    $i++;
-  }
-  echo "<div id='global_cmds' style='float:left;clear:both;'><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
+    echo "<br/><div id='global_cmds' style='float:left;clear:both;'><br/><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
 }
 
+  function running_torrents($rows, &$ids, &$finished_ids) {
+      $id_pattern = "(&nbsp;)+(?<id>\d+)(&nbsp;)+";
+      $percent_pattern = "(?<percentage>\d+%|n\/a)(&nbsp;)+";
+      $have_pattern = "(?<have>\d+\.\d&nbsp;MB|\d+\.\d&nbsp;KB|\d+\.\d&nbsp;GB|None)(&nbsp;)+";
+      $eta_pattern = "(?<eta>\d+&nbsp;day|\d+&nbsp;days|\d+&nbsp;hrs|\d+&nbsp;min|\d+sec|Unknown|Done)(&nbsp;)+";
+      $band_pattern = "(?<band_up>\d+\.\d)(&nbsp;)+(?<band_down>\d+\.\d)(&nbsp;)+";
+      $share_pattern = "(?<share>\d\.\d+|None)(&nbsp;)+";
+      $status_pattern = "(?<status>Stopped|Seeding|Idle|Verifying|Downloading)(&nbsp;)+";
+      $title_pattern = "(?<title>(.*))";
+
+      #$pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern/";
+      $pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern$band_pattern$share_pattern$status_pattern$title_pattern$/";
+
+      $i = 0;
+      echo "<table class='running_torrents' style='float:left;clear:both;'>
+                <tr style='color:white;'>
+                    <th>Action</th><th>% Done</th><th>Have</th><th>ETA</th><th>Up (KB/s)</th><th>Down (KB/s)</th><th>Ratio</th><th>Status</th><th>Title</th><th>Delete</th>
+                </tr>";
+
+      foreach ($rows as $row) {
+        preg_match($pattern, $row, $matches);
+        $id = $matches[id];
+        
+        # echo "<br/><br/><br/>";echo "$row<br/>";print_r($matches);echo "<br/><br/>";
+
+        $percentage = $matches[percentage] == null ? '0' : $matches[percentage];
+        $have = $matches[have];
+        $eta = $matches[eta];
+        $band_up = $matches[band_up]; $band_down = $matches[band_down];
+        $share = $matches[share];
+        $status = $matches[status];
+        $title = $matches[title];
+
+        $toggle_cmd = 'stop';
+        $toggle_img = 'stop.gif';
+        if (strstr($row, "Stopped")) {
+          $toggle_cmd = 'start';
+          $toggle_img = 'play.jpeg';
+        }
+
+        $bkgrd_color = 'skyBlue';
+        $text_color = 'black';
+
+        if ($i % 2 == 0) $bkgrd_color = 'lightSteelBlue';
+        if ($percentage == '100%') {
+          $text_color = 'red';
+          $finished_ids[] = $id;
+        }
+
+        $q = $_GET["q"];
+        $action_icon_id = "<a href='?transmission={$toggle_cmd}&id={$id}&q={$q}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
+        $delete_torrent = "<a href='?transmission=remove&id={$id}&q={$q}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a>";
+
+        echo "  <tr style='color:$text_color;'>
+                    <td>$action_icon_id</td><td>$percentage</td><td>$have</td><td>$eta</td>
+                    <td>$band_up</td><td>$band_down</td><td>$share</td><td>$status</td><td>$title</td>
+                    <td>$delete_torrent</td>
+                </tr>";
+
+        $ids[] = $id;
+        $i++;
+      }
+
+      echo "</table>";
+  }
 ?>
