@@ -299,7 +299,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     $finished_ids = array();
     running_torrents($rows, $ids, $finished_ids);
 
-    echo "<div id='global_cmds' style='float:left;clear:both;'><br/><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Stop all' title='Stop all' src='./images/stop.gif'></a>";
+    echo "<div id='global_cmds' style='float:left;clear:both;'><br/><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
@@ -355,8 +355,8 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
             }
 
             $q = $_GET["q"];
-            $action_icon_id = "<a href='?transmission={$toggle_cmd}&id={$id}&q={$q}'><img width='16px' height='16px' src='./images/{$toggle_img}'></a>";
-            $delete_torrent = "<a href='?transmission=remove&id={$id}&q={$q}'><img alt='Remove torrent' title='Remove torrent' width='16px' height='16px' src='./images/remove.jpeg'></a>";
+            $action_icon_id = "<a href='?transmission={$toggle_cmd}&id={$id}&q={$q}'><img title='{$toggle_cmd} {$id}' alt='{$toggle_cmd} {$id}' width='16px' height='16px' src='./images/{$toggle_img}'></a>";
+            $delete_torrent = "<a href='?transmission=remove&id={$id}&q={$q}'><img alt='remove {$id}' title='remove {$id}' width='16px' height='16px' src='./images/remove.jpeg'></a>";
 
             echo "  <tr style='color:$text_color;'>
                         <td>$action_icon_id</td><td>$percentage</td><td>$have</td><td>$eta</td>
