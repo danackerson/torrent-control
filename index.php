@@ -45,7 +45,7 @@ $file = $_FILES["file"];
         xmlhttp.send();
 
         currentDirP = document.getElementById("currentDir");
-        currentDirP.innerText = currentDirectory;
+        currentDirP.innerText = "  " + currentDirectory;
       }
 
       (function($){
@@ -88,9 +88,9 @@ $file = $_FILES["file"];
       margin-left: 65%;
       padding:5px 10px;
       bottom:5px;
-      width:30%;
-      height:200px; /* Height of the footer */
-      background:lightCoral; /*Background color */
+      width:33%;
+      height:400px; /* Height of the footer */
+      background:lightGreen; /*Background color */
       overflow:scroll;
       }
 
@@ -265,8 +265,15 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
 ?>
       </div>
       <div id="floater"  style="overflow:auto;">
-        <span id="currentDir" style="font-weight:bold;font-size:11px;"></span>
+        <img width="16" height="16" src="./images/home.png"><span id="currentDir" style=""></span><hr/>
         <div id="dirContents">File information</div>
+        <div style="position:absolute;bottom:10px;width:95%;">
+          <hr/>
+          <img width="16" height="16" src="./images/bookmark.png">&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');" style="text-decoration: none;">tv&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/tv.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');" style="text-decoration: none;">movies&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/movie.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');" style="text-decoration: none;">torrents<img style="vertical-align:bottom;" width="24" height="24" src="./images/torrent.png"></a>
+        </div>
       </div>
     </div>
   </body>

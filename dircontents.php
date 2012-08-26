@@ -15,9 +15,23 @@ if (!is_null($ls)) {
 
         # escape $full_path - especially ticks cause it kills the javascript rendering on frontend
         $full_path = str_replace("'", "&#039", $full_path);
-        echo "<span style='display:block;margin:3px;font-weight:bold;'><a href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}/</a><br/></span>";
+        echo "<span style='display:block;margin-top:4px;font-weight:bold;'><img width='16' height='16' src='./images/folder.png'>&nbsp;&nbsp;<a style='vertical-align:top;' href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}/</a><br/></span>";
       } else {
-        echo "<span style='display:block;margin:3px;'>{$file}<br/></span>";
+        # TODO - paint these as xspf links?
+        # TODO - probably only interesting to link .avi, .mp4, .mov, .mkv, .wmv, etc. files
+
+        $icon = "movies";
+        $link = urlencode($ls."/".$file);
+        if (  substr($file, -strlen(".avi")) === ".avi" || substr($file, -strlen(".mov")) === ".mov" || 
+              substr($file, -strlen(".mkv")) === ".mkv" || substr($file, -strlen(".flv")) === ".flv" ||
+              substr($file, -strlen(".3gp")) === ".3gp" || substr($file, -strlen(".mp4")) === ".mp4" ||
+              substr($file, -strlen(".mpeg")) === ".mpeg" || substr($file, -strlen(".mpeg4")) === ".mpeg4" ) {
+          $file_string = "<a style='vertical-align:top;' href='./xspf.php?f=$link'>{$file}</a>";
+        } else {
+          $icon = "file";
+          $file_string = $file;
+        }
+        echo "<span style='display:block;margin-top:4px;'><img width='16' height='16' src='./images/$icon.png'>&nbsp;&nbsp;$file_string<br/></span>";
       }
     }
   }
