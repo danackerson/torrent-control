@@ -147,9 +147,8 @@ $file = $_FILES["file"];
   <div id="container">
     <div id="header" style="float:left;clear:both;width:80%;">
       <form action="." method="get" style="float:left;margin-bottom:0;">
-<a href="./?q=<?=$q?>"><img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.png'></a>
-&nbsp;&nbsp;Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
-<a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:4px;' src='./images/clear.png'></a>
+Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
+<a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:3px;' src='./images/clear.png'></a>
 <input type="submit" value="Search" />&nbsp;&nbsp;
 |&nbsp;&nbsp;&nbsp;&nbsp;Magnet hash:<input type="text" name="xt" value=""/>
 <input type="submit" value="Download" />&nbsp;&nbsp;
@@ -297,7 +296,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     $finished_ids = array();
     running_torrents($rows, $ids, $finished_ids);
 
-    echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;'><br/><span style='color:white;vertical-align:top;margin-left:28px;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
+    echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;'><br/><span style='color:white;vertical-align:top;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
