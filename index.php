@@ -97,8 +97,8 @@ $file = $_FILES["file"];
       table.running_torrents {
         border-width: 1px;
         border-spacing: 2px;
-        border-style: hidden;
-        border-color: black;
+        border-style: solid;
+        border-color: gray;
         border-collapse: collapse;
         background-color: skyBlue;
         text-align: center;
@@ -146,7 +146,7 @@ $file = $_FILES["file"];
 <body>
   <div id="container">
     <div id="header" style="float:left;clear:both;width:80%;">
-      <form action="." method="get" style="float:left;">
+      <form action="." method="get" style="float:left;margin-bottom:0;">
 <a href="./?q=<?=$q?>"><img alt='Refresh' title='Refresh' width='16px' height='16px' style='vertical-align:middle;margin-bottom:4px;' src='./images/refresh.png'></a>
 &nbsp;&nbsp;Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
 <a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:4px;' src='./images/clear.png'></a>
@@ -154,11 +154,10 @@ $file = $_FILES["file"];
 |&nbsp;&nbsp;&nbsp;&nbsp;Magnet hash:<input type="text" name="xt" value=""/>
 <input type="submit" value="Download" />&nbsp;&nbsp;
       </form>
-      <form action="." method="post" enctype="multipart/form-data" style="float:right;">
+      <form action="." method="post" enctype="multipart/form-data" style="float:right;margin-bottom:0;">
         <label for="file" style="font-style:italic;">.torrent:</label>
         <input type="file" name="file" id="file" style="background-color:white;" /><input type="submit" name="submit" value="Download" />
       </form>
-      <hr style="float:left;width:100%;"/>
 <?
 // a transmission cmd was invoked - Execute!
 if (!is_null($trans_cmd) && !is_null($id)) {
@@ -198,7 +197,6 @@ if (!is_null($file)) {
 
 torrent_list_info();
 ?>
-      <hr style="float:left;clear:both;width:100%;">
     </div>
     <div id="body" style="float:left;clear:both;width:80%;">
 <?
@@ -299,7 +297,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     $finished_ids = array();
     running_torrents($rows, $ids, $finished_ids);
 
-    echo "<div id='global_cmds' style='float:left;clear:both;'><br/><span style='color:white;'> Global commands:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
+    echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;'><br/><span style='color:white;vertical-align:top;margin-left:28px;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
@@ -319,7 +317,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
         $pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern$band_pattern$share_pattern$status_pattern$title_pattern$/";
 
         $i = 0;
-        echo "<table class='running_torrents' style='float:left;clear:both;'>
+        echo "<table class='running_torrents' style='float:left;clear:both;margin:25px;'>
                 <tr style='color:white;'>
                     <th>Action</th><th>% Done</th><th>Have</th><th>ETA</th><th>Up (KB/s)</th><th>Down (KB/s)</th><th>Ratio</th><th>Status</th><th>Title</th><th>Delete</th>
                 </tr>";
