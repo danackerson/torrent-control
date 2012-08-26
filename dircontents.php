@@ -13,6 +13,8 @@ if (!is_null($ls)) {
           $full_path = substr($ls, 0, strrpos($ls , "/"));
         }
 
+        # escape $full_path - especially ticks cause it kills the javascript rendering on frontend
+        $full_path = str_replace("'", "&#039", $full_path);
         echo "<span style='display:block;margin:3px;font-weight:bold;'><a href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}/</a><br/></span>";
       } else {
         echo "<span style='display:block;margin:3px;'>{$file}<br/></span>";

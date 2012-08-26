@@ -41,7 +41,7 @@ $file = $_FILES["file"];
           }
         }
 
-        xmlhttp.open("GET","dircontents.php?ls="+dir,true);
+        xmlhttp.open("GET","dircontents.php?ls="+escape(dir),true);
         xmlhttp.send();
 
         currentDirP = document.getElementById("currentDir");
@@ -49,7 +49,7 @@ $file = $_FILES["file"];
       }
 
       (function($){
-          var timeout = 30000;
+          var timeout = 60000;
 
           $(document).bind("idle.idleTimer", function(){
             location.reload();
