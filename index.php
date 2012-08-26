@@ -130,7 +130,8 @@ $file = $_FILES["file"];
         padding: 4px;
         border-style: inset;
         border-color: gray;
-        background-color: orange;
+        background-color: black;
+        color: orange;
       }
       table.available_torrents td {
         border-width: 1px;
@@ -217,19 +218,25 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     $i = 0;
 
     echo "<table class='available_torrents' style='float:left;clear:both;width:80%;'>
-                <tr>
-                    <th>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
-                </tr>";
+            <tr>
+              <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
+            </tr>";
 
     foreach ($results as $result) {
-      $hash = substr($result->getElementsByTagName('a')->item(0)->getAttribute("href"), 1);
+      $a_tag = $result->getElementsByTagName('a');
+      if ($a_tag != null) {
+        $first_result = $a_tag->item(0);
+        if ($first_result != null) {
+          $hash = $first_result->getAttribute("href");
+        }
+      }
+      if ($hash == null) continue;
+      $hash = substr($hash, 1);
       if (substr($hash, 0, 3) == "z/s") continue;
       $name = $result->getElementsByTagName('a')->item(0)->nodeValue;
 
       $bkgrd_color = 'white';
       if ($i % 2 == 0) $bkgrd_color = 'wheat';
-      #echo "<span style='padding:2px;display:block;background-color:{$bkgrd_color};'>";
-      #echo "<a href='?xt={$hash}&q={$q}'>{$name}</a>&nbsp;&nbsp;";
 
     	$spans = $result->getElementsByTagName('span');
     	foreach ($spans as $span) {
@@ -247,11 +254,10 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     	  }
     	}
 
-        echo "  <tr style='background-color:$bkgrd_color;'>
-            <td><a href='?xt={$hash}&q={$q}'>{$name}</a></td><td style='font-weight:bold;'>$size</td>
-            <td>$seeds</td><td>$leech</td>
-        </tr>";
-      #echo "</span>";
+        echo "<tr style='background-color:$bkgrd_color;'>
+                <td><a href='?xt={$hash}&q={$q}'>{$name}</a></td><td style='font-weight:bold;'>$size</td>
+                <td>$seeds</td><td>$leech</td>
+              </tr>";
       $i++;
     }
 
@@ -306,7 +312,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
         $eta_pattern = "(?<eta>\d+&nbsp;day|\d+&nbsp;days|\d+&nbsp;hrs|\d+&nbsp;min|\d+sec|Unknown|Done)(&nbsp;)+";
         $band_pattern = "(?<band_up>\d+\.\d)(&nbsp;)+(?<band_down>\d+\.\d)(&nbsp;)+";
         $share_pattern = "(?<share>\d\.\d+|None)(&nbsp;)+";
-        $status_pattern = "(?<status>Stopped|Seeding|Idle|Verifying|Downloading)(&nbsp;)+";
+        $status_pattern = "(?<status>Stopped|Seeding|Idle|Verifying|Downloading|Up&nbsp;&&nbsp;Down)(&nbsp;)+";
         $title_pattern = "(?<title>(.*))";
 
         #$pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern/";
@@ -322,7 +328,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
             preg_match($pattern, $row, $matches);
             $id = $matches[id];
 
-            # echo "<br/><br/><br/>";echo "$row<br/>";print_r($matches);echo "<br/><br/>";
+            #echo "<br/><br/><br/>";echo "$row<br/>";print_r($matches);echo "<br/><br/>";
 
             $percentage = $matches[percentage] == null ? '0' : $matches[percentage];
             $have = $matches[have];
