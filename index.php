@@ -1,10 +1,15 @@
 <?php
+
+session_start();
+
 $q = $_GET["q"];
 $xt = $_GET["xt"];
 $trans_cmd = $_GET["transmission"];
 $id = $_GET["id"];
-$current_directory = '/mnt/disk/volume1/service/DLNA/torrents';
 $file = $_FILES["file"];
+
+$current_directory = $_SESSION['currentDirectory'];
+if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/DLNA/torrents';
 ?>
 
 <html>
@@ -75,11 +80,9 @@ $file = $_FILES["file"];
       }
       #header {
         background:skyBlue; /*Background color */ 
-        #padding:10px;
         width:100%;
         float:left;
         clear:both;
-        #margin-top:1px;
         margin-bottom:1px;
       }
       #body {
@@ -87,29 +90,32 @@ $file = $_FILES["file"];
         margin-right:1px;
         float:left;
         clear:none;
-        #width:60%;
       }
-      #floater {
+      #explorer {
         #opacity:0.9;
-        border: 1px solid black;
+        border: 1px solid gray;
         position:absolute;
-        top:139px;
+        bottom:1px;
         right:1px;
-        background:lightGreen; /*Background color */
-        overflow:auto;
+        height:75%;
+        width:40%;
+        background:lightGreen;
         float:right;
         clear:none;
-        #width:39%;
       }
-      #floater_footer {
+      #explorer_header {
         position:relative;
         padding-top:8px;
-        #padding-left:5px;
-        #padding-right:5px;
-        #bottom:10px;
-        #width:95%;
-        #border: 1px solid black;
         background-color:lightBlue;
+      }
+      #explorer_current {
+        height: 90%;
+        overflow: auto;
+        position: absolute;
+        top: 50px;
+        white-space: nowrap;
+        width: 100%;
+        padding-bottom: 10px;
       }
 
       table.running_torrents {
@@ -282,16 +288,17 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
 
 ?>
       </div>
-      <div id="floater"  style="">
-        <div id="floater_footer" style="">
+      <div id="explorer"  style="">
+        <div id="explorer_header" style="">
           <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');" style="text-decoration: none;padding-left:40px;">tv&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/tv.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');" style="text-decoration: none;">movies&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/movie.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');" style="text-decoration: none;margin-right:40px;">torrents<img style="vertical-align:bottom;" width="24" height="24" src="./images/torrent.png"></a>
           <hr/>
         </div>
+        <div id="explorer_current">
         <img width="16" height="16" style="padding-left:5px;" src="./images/nas.png"><span id="currentDir" style="padding-left:15px;"></span><hr/>
-        <div id="dirContents" style="padding-bottom:15px;">File information</div>
-        
+        <div id="dirContents" style="">File information</div>
+        </div>
       </div>
     </div>
   </body>

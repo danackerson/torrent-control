@@ -1,7 +1,9 @@
 <?php
+session_start();
 $ls = $_GET["ls"];
 
 if (!is_null($ls)) {
+  $_SESSION['currentDirectory'] = $ls;
   $files = scandir($ls);
   
   foreach($files as $file) {
