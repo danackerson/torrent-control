@@ -10,7 +10,7 @@ $file = $_FILES["file"];
 <html>
   <head>
     <title>Fam Ackerson Torrent Mgmt</title>
-
+    <link rel="shortcut icon" href="./images/torrent.png">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
     <script type="text/javascript" src="http://github.com/paulirish/jquery-idletimer/raw/master/jquery.idle-timer.js"></script>
 
@@ -45,7 +45,7 @@ $file = $_FILES["file"];
         xmlhttp.send();
 
         currentDirP = document.getElementById("currentDir");
-        currentDirP.innerText = "  " + currentDirectory;
+        currentDirP.innerText = "      " + currentDirectory;
       }
 
       (function($){
@@ -64,34 +64,52 @@ $file = $_FILES["file"];
       <!--
       html,
       body {
-      margin:0;
-      padding:0;
-      height:100%;
+        margin:0;
+        padding:0;
+        height:100%;
       }
       #container {
-      min-height:100%;
-      height: 100%;
-      position:relative;
+        min-height:100%;
+        height: 100%;
+        position:relative;
       }
       #header {
-      background:skyBlue; /*Background color */ 
-      padding:10px;
+        background:skyBlue; /*Background color */ 
+        #padding:10px;
+        width:100%;
+        float:left;
+        clear:both;
+        #margin-top:1px;
+        margin-bottom:1px;
       }
       #body {
-      padding:0px;
-      padding-bottom:60px; /* Height of the footer */
+        margin-left:1px;
+        margin-right:1px;
+        float:left;
+        clear:none;
+        #width:60%;
       }
       #floater {
-      #opacity:0.9;
-      border: 1px solid black;
-      position:absolute;
-      margin-left: 65%;
-      padding:5px 10px;
-      bottom:5px;
-      width:33%;
-      height:400px; /* Height of the footer */
-      background:lightGreen; /*Background color */
-      overflow:scroll;
+        #opacity:0.9;
+        border: 1px solid black;
+        position:absolute;
+        top:139px;
+        right:1px;
+        background:lightGreen; /*Background color */
+        overflow:auto;
+        float:right;
+        clear:none;
+        #width:39%;
+      }
+      #floater_footer {
+        position:relative;
+        padding-top:8px;
+        #padding-left:5px;
+        #padding-right:5px;
+        #bottom:10px;
+        #width:95%;
+        #border: 1px solid black;
+        background-color:lightBlue;
       }
 
       table.running_torrents {
@@ -145,15 +163,15 @@ $file = $_FILES["file"];
 
 <body>
   <div id="container">
-    <div id="header" style="float:left;clear:both;width:80%;">
-      <form action="." method="get" style="float:left;margin-bottom:0;">
+    <div id="header">
+      <form action="." method="get" style="float:left;margin-bottom:0;margin-left:10px;margin-top:10px;">
 Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
 <a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:3px;' src='./images/clear.png'></a>
 <input type="submit" value="Search" />&nbsp;&nbsp;
 |&nbsp;&nbsp;&nbsp;&nbsp;Magnet hash:<input type="text" name="xt" value=""/>
 <input type="submit" value="Download" />&nbsp;&nbsp;
       </form>
-      <form action="." method="post" enctype="multipart/form-data" style="float:right;margin-bottom:0;">
+      <form action="." method="post" enctype="multipart/form-data" style="float:right;margin-bottom:0;margin-right:20px;margin-top:10px;">
         <label for="file" style="font-style:italic;">.torrent:</label>
         <input type="file" name="file" id="file" style="background-color:white;" /><input type="submit" name="submit" value="Download" />
       </form>
@@ -177,7 +195,7 @@ if (!is_null($trans_cmd) && !is_null($id)) {
 if (!is_null($xt) && $xt != "") {
     $uri = "magnet:?xt=urn:btih:".$xt;
     $result = shell_exec("transmission-remote -a ${uri} 2>&1");
-    echo "<span style='float:left;color:green;'>$result</span>";
+    #echo "<span style='float:left;color:green;'>$result</span>";
 }
 // torrent file upload
 if (!is_null($file)) {
@@ -197,7 +215,7 @@ if (!is_null($file)) {
 torrent_list_info();
 ?>
     </div>
-    <div id="body" style="float:left;clear:both;width:80%;">
+    <div id="body" style="">
 <?
 # A search was made! Show results...
 if (!is_null($q) && strlen(trim($q)) > 0) {
@@ -214,7 +232,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
   if (!is_null($results)) {
     $i = 0;
 
-    echo "<table class='available_torrents' style='float:left;clear:both;width:80%;'>
+    echo "<table class='available_torrents' style=''>
             <tr>
               <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
             </tr>";
@@ -264,16 +282,16 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
 
 ?>
       </div>
-      <div id="floater"  style="overflow:auto;">
-        <img width="16" height="16" src="./images/home.png"><span id="currentDir" style=""></span><hr/>
-        <div id="dirContents">File information</div>
-        <div style="position:absolute;bottom:10px;width:95%;">
-          <hr/>
-          <img width="16" height="16" src="./images/bookmark.png">&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');" style="text-decoration: none;">tv&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/tv.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div id="floater"  style="">
+        <div id="floater_footer" style="">
+          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');" style="text-decoration: none;padding-left:40px;">tv&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/tv.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');" style="text-decoration: none;">movies&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/movie.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');" style="text-decoration: none;">torrents<img style="vertical-align:bottom;" width="24" height="24" src="./images/torrent.png"></a>
+          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');" style="text-decoration: none;margin-right:40px;">torrents<img style="vertical-align:bottom;" width="24" height="24" src="./images/torrent.png"></a>
+          <hr/>
         </div>
+        <img width="16" height="16" style="padding-left:5px;" src="./images/nas.png"><span id="currentDir" style="padding-left:15px;"></span><hr/>
+        <div id="dirContents" style="padding-bottom:15px;">File information</div>
+        
       </div>
     </div>
   </body>
@@ -303,7 +321,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
     $finished_ids = array();
     running_torrents($rows, $ids, $finished_ids);
 
-    echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;'><br/><span style='color:white;vertical-align:top;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
+    echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;margin-left:10px;'><br/><span style='color:white;vertical-align:top;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=stop&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=start&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $ids)."&q={$q}'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
     echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?transmission=remove&id=".implode(',', $finished_ids)."&q={$q}'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
@@ -325,7 +343,7 @@ if (!is_null($q) && strlen(trim($q)) > 0) {
         $i = 0;
         echo "<table class='running_torrents' style='float:left;clear:both;margin:25px;'>
                 <tr style='color:white;'>
-                    <th>Action</th><th>% Done</th><th>Have</th><th>ETA</th><th>Up (KB/s)</th><th>Down (KB/s)</th><th>Ratio</th><th>Status</th><th>Title</th><th>Delete</th>
+                    <th><img width='24' height='24' src='./images/running_torrents.png' alt='Action' title='Action'></th><th>% Done</th><th>Have</th><th>ETA</th><th>Up (KB/s)</th><th>Down (KB/s)</th><th>Ratio</th><th>Status</th><th>Title</th><th>Delete</th>
                 </tr>";
 
         foreach ($rows as $row) {
