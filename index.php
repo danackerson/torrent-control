@@ -174,7 +174,7 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
 Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
 <a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:3px;' src='./images/clear.png'></a>
 <input type="submit" value="Search" />&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;Magnet hash:<input type="text" name="xt" value=""/>
+|&nbsp;&nbsp;&nbsp;&nbsp;Info hash:<input type="text" name="xt" value=""/>
 <input type="submit" value="Download" />&nbsp;&nbsp;
       </form>
       <form action="." method="post" enctype="multipart/form-data" style="float:right;margin-bottom:0;margin-right:20px;margin-top:10px;">
