@@ -208,12 +208,8 @@ if (!is_null($file)) {
     if ($file["error"] > 0) {
         echo "Error: " . $file["error"] . "<br />";
     } else {
-        require 'bencoded.php';
-        $be = new BEncoded;
-        $be->FromFile($file["tmp_name"]);
-        $uri = "magnet:?xt=urn:btih:".$be->InfoHash();
-
-        $result = shell_exec("transmission-remote -a ${uri} 2>&1");
+        $cmd = "transmission-remote -a ".$file["tmp_name"]." 2>&1";
+        $result = shell_exec($cmd);
         #echo "<span style='float:left;color:green;'>$result</span>";
     }
 }
