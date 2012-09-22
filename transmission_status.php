@@ -3,7 +3,9 @@ $rows = array();
 $ids = array();
 $finished_ids = array();
 
-transmission_status($rows);
+$turtle_rate = $bear_rate = $rabbit_rate = 'skyBlue';
+
+transmission_status($rows, $turtle_rate, $bear_rate, $rabbit_rate);
 
 running_torrents($rows, $ids, $finished_ids);
 
@@ -12,14 +14,14 @@ echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"start\", \"
 echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
 echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $finished_ids)."\");'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a>";
 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:white;vertical-align:top;'> Rate:</span>";
-echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit90\", null);'><img width='24px' height='16px' style='vertical-align:top;' alt='Slow' title='Low speed' src='./images/turtle.png'></a>";
-echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit50\", null);'><img width='24px' height='16px' style='vertical-align:top;' alt='Steady' title='Half speed' src='./images/bear.png'></a>";
-echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit0\", null);'><img width='24px' height='16px' style='vertical-align:top;' alt='Sprint' title='Max speed' src='./images/rabbit.png'></a>";
+echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit90\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$turtle_rate};' alt='Slow' title='Slow' src='./images/turtle.png'></a>";
+echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit50\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$bear_rate};' alt='Steady' title='Steady' src='./images/bear.png'></a>";
+echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit0\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$rabbit_rate};' alt='Sprint' title='Sprint' src='./images/rabbit.png'></a>";
 echo "</div>";
 
-function transmission_status(&$rows) {
+function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) {
 	`transmission-remote -l > /tmp/trans-list.txt`;
-	$handle = fopen("/tmp/trans-list.txt", "r");
+    $handle = fopen("/tmp/trans-list.txt", "r");
 
 	if ($handle) {
 	  while (($buffer = fgets($handle, 4096)) !== false) {
@@ -34,6 +36,33 @@ function transmission_status(&$rows) {
 
 	  fclose($handle);
 	}
+
+    `transmission-remote -si | grep "speed limit" > /tmp/trans-si.txt `;
+    $data = array();
+    $handle = fopen("/tmp/trans-si.txt", "r");
+    if ($handle) {
+      while (($buffer = fgets($handle, 4096)) !== false) {
+          $pattern = "/speed limit: (?<rate>.*) \(/";
+          preg_match($pattern, $buffer, $matches);
+          $rate = trim($matches[rate]);
+
+          $first_char = substr($rate,0,1);
+          switch ($first_char) {
+            case "5":
+                $turtle_rate = 'green'; break;
+            case "2":
+                $bear_rate = 'green'; break;
+            case "U":
+                $rabbit_rate = 'green'; break;
+          }
+      }
+
+      if (!feof($handle)) {
+          echo "Error: unexpected fgets() fail\n";
+      }
+
+      fclose($handle);
+    }
 }
 
 function running_torrents($rows, &$ids, &$finished_ids) {
