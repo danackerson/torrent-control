@@ -19,6 +19,12 @@ function display_torrent_search($q) {
 		          <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
 		        </tr>";
 
+		if ($results->length == 0) {
+			echo "
+				<tr>
+		          <td>No trusted results. Search torrentz.eu for '<a target='_blank' href='http://torrentz.eu/search?f={$q}'>{$q}</a>'</td>
+		        </tr>";
+		}
 		foreach ($results as $result) {
 	  		$a_tag = $result->getElementsByTagName('a');
 	  		if ($a_tag != null) {

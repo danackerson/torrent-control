@@ -23,7 +23,9 @@ if (!is_null($ls)) {
         # TODO - probably only interesting to link .avi, .mp4, .mov, .mkv, .wmv, etc. files
 
         $icon = "movies";
-        $link = urlencode($ls."/".$file);
+        $link = $ls."/".$file;
+        
+
         if (  substr($file, -strlen(".avi")) === ".avi" || substr($file, -strlen(".mov")) === ".mov" || 
               substr($file, -strlen(".mkv")) === ".mkv" || substr($file, -strlen(".flv")) === ".flv" ||
               substr($file, -strlen(".3gp")) === ".3gp" || substr($file, -strlen(".mp4")) === ".mp4" ||

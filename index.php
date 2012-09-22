@@ -14,7 +14,7 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
 
 <html>
   <head>
-    <title>Fam Ackerson Torrent Mgmt</title>
+    <title>Torrents</title>
     <link rel="shortcut icon" href="./images/torrent.png">
     
     <script type="text/javascript">
@@ -210,7 +210,7 @@ Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
       </form>
       <form action="." method="post" enctype="multipart/form-data" style="float:right;margin-bottom:0;margin-right:20px;margin-top:10px;">
         <label for="file" style="font-style:italic;">.torrent:</label>
-        <input type="file" name="file" id="file" style="background-color:white;" /><input type="submit" name="submit" value="Download" />
+        <input type="file" name="file" id="file" style="background-color:skyBlue;" /><input type="submit" name="submit" value="Download" />
       </form>
       <div id="running_torrents_list"><?php require 'transmission_status.php'?></div>
     </div>
@@ -238,7 +238,7 @@ if (isset($q)) display_torrent_search($q);
           <hr/>
         </div>
         <div id="explorer_current">
-        <img width="16" height="16" style="padding-left:5px;" src="./images/nas.png"><span id="currentDir" style="padding-left:15px;"></span><hr/>
+        <img width="16" height="16" style="padding-left:5px;" src="./images/nas.png" alt="Current directory" title="Current directory"><span id="currentDir" style="padding-left:15px;"></span><hr/>
         <div id="dirContents" style="">File information</div>
         </div>
       </div>

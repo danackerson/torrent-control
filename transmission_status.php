@@ -4,14 +4,18 @@ $ids = array();
 $finished_ids = array();
 
 transmission_status($rows);
-if ($rows.count > 0) transmission_status($rows);
 
 running_torrents($rows, $ids, $finished_ids);
 
 echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;margin-left:10px;'><br/><span style='color:white;vertical-align:top;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"stop\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
 echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"start\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
 echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
-echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $finished_ids)."\");'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a></div>";
+echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $finished_ids)."\");'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a>";
+echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:white;vertical-align:top;'> Rate:</span>";
+echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit90\", null);'><img width='24px' height='16px' style='vertical-align:top;' alt='Slow' title='Low speed' src='./images/turtle.png'></a>";
+echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit50\", null);'><img width='24px' height='16px' style='vertical-align:top;' alt='Steady' title='Half speed' src='./images/bear.png'></a>";
+echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit0\", null);'><img width='24px' height='16px' style='vertical-align:top;' alt='Sprint' title='Max speed' src='./images/rabbit.png'></a>";
+echo "</div>";
 
 function transmission_status(&$rows) {
 	`transmission-remote -l > /tmp/trans-list.txt`;
