@@ -16,7 +16,9 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
   <head>
     <title>Torrents</title>
     <link rel="shortcut icon" href="./images/torrent.png">
-    
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
     <script type="text/javascript">
       var currentDirectory = '<?=$current_directory;?>';
 
@@ -103,6 +105,16 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
         padding:0;
         height:100%;
       }
+      .defaultIcon {
+        background-image: url(images/plusIcon.png) !important;
+        width:32px;
+        height:32px;
+      }
+      .selectedIcon {
+        background-image: url(images/minusIcon.png) !important;
+        width:32px;
+        height:32px;
+      }
       #container {
         min-height:100%;
         height: 100%;
@@ -116,38 +128,22 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
         margin-bottom:1px;
       }
       #body {
-        margin-left:1px;
-        margin-right:1px;
-        float:left;
-        clear:none;
+        position:absolute;
+        top:166px;
+        left:1px;
       }
       #explorer {
-        #opacity:0.9;
-        border: 1px solid gray;
         position:absolute;
         bottom:1px;
         right:1px;
-        height:75%;
-        width:40%;
-        background:lightGreen;
-        float:right;
-        clear:none;
+        z-index:1;
+        font-size:12px;
       }
-      #explorer_header {
-        position:relative;
-        padding-top:8px;
-        background-color:lightBlue;
-      }
-      #explorer_current {
-        height: 90%;
+      #dirContents {
         overflow: auto;
-        position: absolute;
-        top: 50px;
         white-space: nowrap;
-        width: 100%;
-        padding-bottom: 10px;
+        height:75%;
       }
-
       table.running_torrents {
         border-width: 1px;
         border-spacing: 2px;
@@ -195,6 +191,18 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
       }
       -->
     </style>
+        <script>
+    $(function() {
+        $( "#explorer" ).accordion({
+            collapsible: true,
+            heightStyle: "content",
+            active: false
+        });
+        $("#explorer").accordion(
+          "option", "icons", { 'header': 'defaultIcon', 'headerSelected': 'selectedIcon' }
+          );
+    });
+    </script>
   </head>
 
 <body>
@@ -230,18 +238,12 @@ if (isset($q)) display_torrent_search($q);
 
 ?>
       </div>
-      <div id="explorer"  style="">
-        <div id="explorer_header" style="">
-          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');" style="text-decoration: none;padding-left:40px;">tv&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/tv.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');" style="text-decoration: none;">movies&nbsp;<img style="vertical-align:bottom;" width="24" height="24" src="./images/movie.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a href="javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');" style="text-decoration: none;margin-right:40px;">torrents<img style="vertical-align:bottom;" width="24" height="24" src="./images/torrent.png"></a>
-          <hr/>
+        <div id="explorer">
+          <h3>
+            <img width="16" height="16" style="padding-left:5px;vertical-align:bottom;" src="./images/nas.png" alt="Current directory" title="Current directory"><span id="currentDir" style="padding-left:15px;"></span>
+          </h3>
+          <div id="dirContents">File information</div>
         </div>
-        <div id="explorer_current">
-        <img width="16" height="16" style="padding-left:5px;" src="./images/nas.png" alt="Current directory" title="Current directory"><span id="currentDir" style="padding-left:15px;"></span><hr/>
-        <div id="dirContents" style="">File information</div>
-        </div>
-      </div>
     </div>
   </body>
 </html>

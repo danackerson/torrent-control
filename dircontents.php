@@ -5,7 +5,8 @@ $ls = $_GET["ls"];
 if (!is_null($ls)) {
   $_SESSION['currentDirectory'] = $ls;
   $files = scandir($ls);
-  
+   
+          
   foreach($files as $file) {
     if (!preg_match("/^\.(\w+)/", $file) && !preg_match("/^\.$/", $file) && !preg_match("/\.part$/", $file)) {
       if (is_dir($ls."/".$file)) {
@@ -37,5 +38,10 @@ if (!is_null($ls)) {
       }
     }
   }
+
+  echo "<hr><a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');\" style=\"float:right;text-decoration: none;padding-left:10px;\">tv&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/tv.png\"></a>";
+  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');\" style=\"float:right;text-decoration: none;padding-left:10px;\">movies&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/movie.png\"></a>";
+  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');\" style=\"float:right;text-decoration: none;padding-left:10px;\">torrents<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/torrent.png\"></a>";
+
 }
 ?>
