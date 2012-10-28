@@ -39,9 +39,9 @@ if (!is_null($ls)) {
     }
   }
 
-  echo "<hr><a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');\" style=\"float:right;text-decoration: none;padding-left:30px;padding-right:30px;padding-bottom:10px;\">tv&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/tv.png\"></a>";
-  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');\" style=\"float:right;text-decoration: none;padding-left:30px;padding-bottom:10px;\">movies&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/movie.png\"></a>";
-  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');\" style=\"float:right;text-decoration: none;padding-bottom:10px;\">torrents<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/torrent.png\"></a>";
+  echo "<hr><a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');\" style=\"float:right;padding-left:30px;padding-right:30px;padding-bottom:10px;\">/tv&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/tv.png\"></a>";
+  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');\" style=\"float:right;padding-left:20px;padding-bottom:10px;\">/movies&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/movie.png\"></a>";
+  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');\" style=\"float:right;padding-left:10px;padding-bottom:10px;\">/torrents<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/torrent.png\"></a>";
 
 }
 ?>
