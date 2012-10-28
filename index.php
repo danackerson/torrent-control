@@ -153,6 +153,13 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
         background-color: skyBlue;
         text-align: center;
       }
+      .ui-widget-content {
+        background:none;
+        background-color:lightgreen;
+      }
+      .ui-accordion .ui-accordion-content {
+        padding:0;
+      }
       table.running_torrents th {
         border-width: 1px;
         padding: 4px;
@@ -240,7 +247,7 @@ if (isset($q)) display_torrent_search($q);
       </div>
         <div id="explorer">
           <h3>
-            <img width="16" height="16" style="padding-left:5px;vertical-align:bottom;" src="./images/nas.png" alt="Current directory" title="Current directory"><span id="currentDir" style="padding-left:15px;"></span>
+            <span id="currentDir" style="padding-left:5px;"></span> <img width="16" height="16" style="position:relative;right:5px;padding-left:10px;vertical-align:bottom;" src="./images/nas.png" alt="Current directory" title="Current directory">
           </h3>
           <div id="dirContents">File information</div>
         </div>

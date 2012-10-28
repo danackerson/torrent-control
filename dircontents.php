@@ -18,7 +18,7 @@ if (!is_null($ls)) {
 
         # escape $full_path - especially ticks cause it kills the javascript rendering on frontend
         $full_path = str_replace("'", "&#039", $full_path);
-        echo "<span style='display:block;padding-left:5px;margin-top:4px;font-weight:bold;'><img width='16' height='16' src='./images/folder.png'>&nbsp;&nbsp;<a style='vertical-align:top;padding-left:10px;' href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}/</a><br/></span>";
+        echo "<span style='display:block;padding-left:7px;margin-top:4px;font-weight:bold;'><img width='16' height='16' src='./images/folder.png'>&nbsp;&nbsp;<a style='vertical-align:top;' href='javascript:showDirectoryContents(\"{$full_path}\");'>{$file}/</a><br/></span>";
       } else {
         # TODO - paint these as xspf links?
         # TODO - probably only interesting to link .avi, .mp4, .mov, .mkv, .wmv, etc. files
@@ -32,16 +32,16 @@ if (!is_null($ls)) {
               substr($file, -strlen(".3gp")) === ".3gp" || substr($file, -strlen(".mp4")) === ".mp4" ||
               substr($file, -strlen(".mpeg")) === ".mpeg" || substr($file, -strlen(".mpeg4")) === ".mpeg4" ||
               substr($file, -strlen(".rmvb")) === ".rmvb" || substr($file, -strlen(".rv")) === ".rv") {
-          $file_string = "<a style='vertical-align:top;padding-left:10px;' href='./xspf.php?f=$link'>{$file}</a>";
-          echo "<span style='display:block;padding-left:5px;margin-top:4px;'><img width='16' height='16' src='./images/$icon.png'>&nbsp;&nbsp;$file_string<br/></span>";
+          $file_string = "<a style='vertical-align:top;' href='./xspf.php?f=$link'>{$file}</a>";
+          echo "<span style='display:block;padding-left:7px;margin-top:4px;'><img width='16' height='16' src='./images/$icon.png'>&nbsp;&nbsp;$file_string<br/></span>";
         }
       }
     }
   }
 
-  echo "<hr><a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');\" style=\"float:right;text-decoration: none;padding-left:10px;\">tv&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/tv.png\"></a>";
-  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');\" style=\"float:right;text-decoration: none;padding-left:10px;\">movies&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/movie.png\"></a>";
-  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');\" style=\"float:right;text-decoration: none;padding-left:10px;\">torrents<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/torrent.png\"></a>";
+  echo "<hr><a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/tv');\" style=\"float:right;text-decoration: none;padding-left:30px;padding-right:30px;padding-bottom:10px;\">tv&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/tv.png\"></a>";
+  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/movies');\" style=\"float:right;text-decoration: none;padding-left:30px;padding-bottom:10px;\">movies&nbsp;<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/movie.png\"></a>";
+  echo "<a href=\"javascript:showDirectoryContents('/mnt/disk/volume1/service/DLNA/torrents');\" style=\"float:right;text-decoration: none;padding-bottom:10px;\">torrents<img style=\"vertical-align:bottom;\" width=\"24\" height=\"24\" src=\"./images/torrent.png\"></a>";
 
 }
 ?>
