@@ -128,9 +128,9 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
         margin-bottom:1px;
       }
       #body {
-        position:absolute;
-        top:166px;
-        left:1px;
+       # position:absolute;
+       # top:166px;
+       # left:1px;
       }
       #explorer {
         position:absolute;
@@ -236,7 +236,7 @@ if (!is_null($file)) {
     if ($file["error"] > 0) {
         echo "Error: " . $file["error"] . "<br />";
     } else {
-        $cmd = "transmission-remote -a ".$file["tmp_name"]." 2>&1";
+        $cmd = "transmission-remote 9092 -a ".$file["tmp_name"]." 2>&1";
         $result = shell_exec($cmd);
         echo "<span style='float:left;color:green;'>$result => transmission torrent list above will soon refresh with the new info</span>";
     }

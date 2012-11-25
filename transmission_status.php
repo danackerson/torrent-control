@@ -20,7 +20,7 @@ echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit0\", null);'><img 
 echo "</div>";
 
 function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) {
-	`transmission-remote -l > /tmp/trans-list.txt`;
+	`transmission-remote 9092 -l > /tmp/trans-list.txt`;
     $handle = fopen("/tmp/trans-list.txt", "r");
 
 	if ($handle) {
@@ -37,7 +37,7 @@ function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) 
 	  fclose($handle);
 	}
 
-    `transmission-remote -si | grep "speed limit" > /tmp/trans-si.txt `;
+    `transmission-remote 9092 -si | grep "speed limit" > /tmp/trans-si.txt `;
     $data = array();
     $handle = fopen("/tmp/trans-si.txt", "r");
     if ($handle) {

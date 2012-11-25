@@ -26,14 +26,14 @@ function execute($trans_cmd, $id) {
     $torrent_ids = "";
     if ($id) $torrent_ids = "-t {$id}";
     
-    $result = shell_exec("transmission-remote {$torrent_ids} {$cmd} 2>&1");
+    $result = shell_exec("transmission-remote 9092 {$torrent_ids} {$cmd} 2>&1");
     usleep(50000); // wait 15ms for transmission daemon to process - this helps when refreshing current status
     #echo "<span style='float:left;color:green;'>$result</span>";
 }
 
 function add_a_torrent($xt) {
     $uri = "magnet:?xt=urn:btih:".$xt;
-    $result = shell_exec("transmission-remote -a ${uri} 2>&1");
+    $result = shell_exec("transmission-remote 9092 -a ${uri} 2>&1");
     usleep(15000); // wait 15ms for transmission daemon to process - this helps when refreshing current status
     #echo "<span style='float:left;color:green;'>$result</span>";
 }
