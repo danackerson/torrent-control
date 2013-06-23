@@ -16,7 +16,7 @@ function display_torrent_search($q) {
 
 		echo "<table class='available_torrents' style=''>
 		        <tr>
-		          <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
+		          <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>M</th><th>Size</th><th>Seeders</th><th>Leechers</th>
 		        </tr>";
 
 		if ($results->length == 0) {
@@ -58,12 +58,15 @@ function display_torrent_search($q) {
 				}
 			}
 
-		    echo "<tr style='background-color:$bkgrd_color;'>
-		            <td><a href='javascript:add_a_torrent(\"{$hash}\");'>{$name}</a></td><td style='font-weight:bold;'>$size</td>
-		            <td>$seeds</td><td>$leech</td>
-		          </tr>";
-		  	
-		  	$i++;
+			$encoded_name = urlencode($name);
+	    echo "<tr style='background-color:$bkgrd_color;'>
+	            <td><a href='javascript:add_a_torrent(\"{$hash}\");'>{$name}</a></td>
+	            <td><a href='magnet:?xt=urn:btih:{$hash}&dn={$encoded_name}' title='Download this file with a magnet link'><img src='./images/magnet_link.png' alt='Magnet link'></a></td>
+	            <td style='font-weight:bold;'>$size</td>
+	            <td>$seeds</td><td>$leech</td>
+	          </tr>";
+	  	
+	  	$i++;
 		}
 
 		echo "</table>";
