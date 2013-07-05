@@ -71,13 +71,13 @@ function running_torrents($rows, &$ids, &$finished_ids) {
     $have_pattern = "(?<have>\d+\.\d&nbsp;MB|\d+\.\d&nbsp;KB|\d+\.\d&nbsp;GB|None)(&nbsp;)+";
     $eta_pattern = "(?<eta>\d+&nbsp;day|\d+&nbsp;days|\d+&nbsp;hrs|\d+&nbsp;min|\d+sec|Unknown|Done)(&nbsp;)+";
     $band_pattern = "(?<band_up>\d+\.\d)(&nbsp;)+(?<band_down>\d+\.\d)(&nbsp;)+";
-    $share_pattern = "(?<share>\d\.\d+|None)(&nbsp;)+";
+    $share_pattern = "(?<share>\d+\.\d+|None)(&nbsp;)+";
     $status_pattern = "(?<status>Stopped|Seeding|Idle|Verifying|Downloading|Up&nbsp;&&nbsp;Down)(&nbsp;)+";
     $title_pattern = "(?<title>(.*))";
 
-    #$pattern = "/^$id_pattern";
+#    $pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern$band_pattern$share_pattern/";
     $pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern$band_pattern$share_pattern$status_pattern$title_pattern$/";
-
+    
     $i = 0;
     echo "<table class='running_torrents' style='float:left;clear:both;margin:25px;'>
             <tr style='color:white;'>
