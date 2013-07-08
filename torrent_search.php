@@ -1,7 +1,7 @@
 <?php
 
 function display_torrent_search($q) {
-	# TODO : https does NOT work here!!
+	# TODO : https does NOT work here!
 	$html = "http://torrentz.eu/verifiedP?f={$q}"; #q=Game+of+Thrones+S02E09
 
 	$dom_document = new DOMDocument();
@@ -16,21 +16,21 @@ function display_torrent_search($q) {
 
 		echo "<table class='available_torrents' style=''>
 		        <tr>
-		          <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>M</th><th>Size</th><th>Seeders</th><th>Leechers</th>
+		          <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
 		        </tr>";
 
 		if ($results->length == 0) {
 			echo "
 				<tr>
-		          <td>No trusted results. Search torrentz.eu for '<a target='_blank' href='http://torrentz.eu/search?f={$q}'>{$q}</a>'</td>
-		        </tr>";
+		      <td>No trusted results. Search torrentz.eu for '<a target='_blank' href='http://torrentz.eu/search?f={$q}'>{$q}</a>'</td>
+		    </tr>";
 		}
 		foreach ($results as $result) {
 	  		$a_tag = $result->getElementsByTagName('a');
 	  		if ($a_tag != null) {
 	    		$first_result = $a_tag->item(0);
 	    		if ($first_result != null) {
-	      			$hash = $first_result->getAttribute("href");
+	      		$hash = $first_result->getAttribute("href");
 	    		}
 	  		}
 	  
@@ -60,8 +60,7 @@ function display_torrent_search($q) {
 
 			$encoded_name = urlencode($name);
 	    echo "<tr style='background-color:$bkgrd_color;'>
-	            <td><a href='javascript:add_a_torrent(\"{$hash}\");'>{$name}</a></td>
-	            <td><a href='magnet:?xt=urn:btih:{$hash}&dn={$encoded_name}' title='Download this file with a magnet link'><img src='./images/magnet_link.png' alt='Magnet link'></a></td>
+	    				<td><a href='javascript:add_a_torrent(\"{$hash}\", \"{$encoded_name}\");'>{$name}</a></td>
 	            <td style='font-weight:bold;'>$size</td>
 	            <td>$seeds</td><td>$leech</td>
 	          </tr>";

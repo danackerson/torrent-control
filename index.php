@@ -62,6 +62,12 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
         }
       }
 
+      function vpn_cmd(cmd) {
+        transmission_ajax.open("GET","transmission_cmds.php?cmd=" + cmd,true);
+        transmission_ajax.send();
+        display_running_torrents();
+      }
+
       function transmission_cmd(cmd, id) {
         transmission_ajax.open("GET","transmission_cmds.php?cmd=" + cmd + "&id=" + id,true);
         transmission_ajax.send();
@@ -74,8 +80,11 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
         else alert("Invalid or missing hash string");
       }
 
-      function add_a_torrent(xt) {
-        transmission_ajax.open("GET","transmission_cmds.php?xt=" + xt,true);
+      function add_a_torrent(xt, dn) {
+        params = "transmission_cmds.php?xt=" + xt;
+        if (dn !== "undefined") params = params + "&dn=" + dn;
+        
+        transmission_ajax.open("GET",params,true);
         transmission_ajax.send();
         display_running_torrents();
       }
@@ -220,7 +229,7 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
 Show:<input type="text" name="q" value="<?=$q;?>"/>&nbsp;&nbsp;
 <a href="."><img alt='Clear search' title='Clear search' width='16px' height='16px' style='vertical-align:middle;margin-left:-14px;margin-bottom:3px;' src='./images/clear.png'></a>
 <input type="submit" value="Search" />&nbsp;&nbsp;
-|&nbsp;&nbsp;&nbsp;&nbsp;Info hash:<input type="text" name="xt" value=""/>
+|&nbsp;&nbsp;&nbsp;&nbsp;Hash:<input type="text" name="xt" value=""/>
 <a class="xtbutton" href="javascript:try_to_download();">Download</a>&nbsp;&nbsp;
       </form>
       <form action="." method="post" enctype="multipart/form-data" style="float:right;margin-bottom:0;margin-right:20px;margin-top:10px;">
