@@ -32,7 +32,7 @@ function execute($trans_cmd, $id) {
     } else if ($trans_cmd == 'remove') {
       $cmd = "-r";
     } else if ($trans_cmd == 'limit50') {
-      $cmd = "-u 20 -d 150";
+      $cmd = "-u 20 -d 350";
     } else if ($trans_cmd == 'limit90') {
       $cmd = "-u 5 -d 5";
     } else if ($trans_cmd == 'limit0') {
