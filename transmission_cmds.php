@@ -13,12 +13,10 @@ function vpn_exec($vpn_cmd) {
 
       if ($vpn_cmd == 'vpn_up') {
         $cmd = "sudo /usr/sbin/openvpn --config /etc/openvpn/amsterdam.conf --script-security 2 --down '/usr/bin/transmission-remote 9092 -tall --stop' --down-pre 2>&1";
-        #TODO - think about --up-delay --up 'transmission-remote 9092 -tall start' ?
       }
 
       $result = shell_exec($cmd);
 
-      #file_put_contents('/tmp/dan.out', $result);
       usleep(50000);
 }
 
@@ -44,7 +42,7 @@ function execute($trans_cmd, $id) {
     
     $result = shell_exec("transmission-remote 9092 {$torrent_ids} {$cmd} 2>&1");
     
-    usleep(50000); // wait 15ms for transmission daemon to process - this helps when refreshing current status
+    usleep(50000); // wait 50ms for transmission daemon to process - this helps when refreshing current status
     #echo "<span style='float:left;color:green;'>$result</span>";
 }
 
@@ -52,19 +50,13 @@ function add_a_torrent($xt, $dn="") {
     $uri = "magnet:?xt=urn:btih:".$xt;
     if ($dn != "") $uri = $uri."&dn=".$dn;
 
-      
     $result = shell_exec("transmission-remote 9092 -a ${uri} 2>&1");
     if (strpos($result, 'success') !== FALSE && $dn != "") {
       $list = shell_exec("transmission-remote 9092 -l");
-      # parse through list to find highest ID
-
-      # create a permanent file link to note the fact this torrent requires an active VPN
-      #shell_exec("touch /tmp/${xt}__${result}");
-
       echo "<span style='float:left;color:green;'>$list</span>";
     }
 
-    #usleep(15000); // wait 15ms for transmission daemon to process - this helps when refreshing current status
+    usleep(50000); // wait 50ms for transmission daemon to process - this helps when refreshing current status
 }
 
 ?>

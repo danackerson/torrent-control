@@ -15,11 +15,6 @@ echo "{$v_stat}";
 echo "</p>";
 
 echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;margin-left:10px;'><br/>";
-#<span style='color:white;vertical-align:top;'> Global ops:</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"stop\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Pause all' title='Pause all' src='./images/stop.gif'></a>";
-#echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"start\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Start all' title='Start all' src='./images/play.jpeg'></a>";
-#echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $ids)."\");'><img width='24px' height='24px' alt='Remove all' title='Remove all' src='./images/remove.jpeg'></a>";
-#echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"remove\", \"".implode(',', $finished_ids)."\");'><img width='24px' height='24px' alt='Remove seeds' title='Remove all finished' src='./images/trash.png'></a>";
-#echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 echo "<span style='color:white;vertical-align:top;'> Rate:</span>";
 echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit90\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$turtle_rate};' alt='Slow' title='Slow' src='./images/turtle.png'></a>";
 echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit50\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$bear_rate};' alt='Steady' title='Steady' src='./images/bear.png'></a>";
@@ -29,12 +24,12 @@ echo "</div>";
 
 function vpn_status() {
     $result=`sudo /root/checkVPN.sh`;
-    $html = "&nbsp;<a href='javascript:vpn_cmd(\"vpn_up\");'><img width='24px' height='24px' alt='No VPN' title='No VPN' style='vertical-align:top;background-color:gray' src='./images/openvpn_off.png'></a>";
+    $html = "&nbsp;<a href='javascript:vpn_cmd(\"vpn_up\");'><img width='24px' height='24px' alt='VPN OFF' title='VPN OFF' style='vertical-align:top;background-color:gray' src='./images/openvpn_off.png'></a>";
    
     if (strpos($result, 'up') !== FALSE) {
-        $html = "<a href='javascript:vpn_cmd(\"vpn_down\");'><img width='24px' height='24px' alt='VPN up' title='VPN up' style='vertical-align:top;' src='./images/openvpn_on.png'></a>&nbsp;&nbsp;<a href='https://www.privatetunnel.com/index.php/my-usage-graphs.html?duration=hour&inhibitGraphs=' target='_blank'><img src='./images/popup.gif'></a>";
+        $html = "<a href='javascript:vpn_cmd(\"vpn_down\");'><img width='24px' height='24px' alt='VPN ON' title='VPN ON' style='vertical-align:top;' src='./images/openvpn_on.png'></a>";
     } 
-    return $html;
+    return "${html}&nbsp;&nbsp;<a href='https://www.privatetunnel.com/index.php/my-usage-graphs.html?duration=hour&inhibitGraphs=' target='_blank'><img src='./images/popup.gif'></a>";
 }
 
 function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) {
