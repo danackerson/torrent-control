@@ -62,6 +62,10 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
           try {
             var complete = document.getElementById('running_torrents_list').getElementsByTagName('tbody')[0].getElementsByTagName('tr')[1].getElementsByTagName('td')[1].innerText;
             document.title=complete+" - Torrents";
+            if (complete == "100%") {
+              var snd = new Audio("finish.wav"); // buffers automatically when created
+              snd.play();
+            }
           } catch (err) {
             document.title="Torrents";
           }
