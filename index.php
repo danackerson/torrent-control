@@ -14,7 +14,7 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
 
 <html>
   <head>
-    <title>Torrents</title>
+    <title style='color:red;'>Torrents</title>
     <link rel="shortcut icon" href="./images/torrent.png">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -59,6 +59,12 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
       running_torrents_list.onreadystatechange=function() {
         if (running_torrents_list.readyState == 4 && running_torrents_list.status == 200) {
           document.getElementById("running_torrents_list").innerHTML=running_torrents_list.responseText;
+          try {
+            var complete = document.getElementById('running_torrents_list').getElementsByTagName('tbody')[0].getElementsByTagName('tr')[1].getElementsByTagName('td')[1].innerText;
+            document.title=complete+" - Torrents";
+          } catch (err) {
+            document.title="Torrents";
+          }
         }
       }
 
@@ -222,7 +228,6 @@ if ($current_directory == null) $current_directory = '/mnt/disk/volume1/service/
   </head>
 
 <body>
-  
   <div id="container">
     <div id="header">
       <form action="." method="get" style="float:left;margin-bottom:0;margin-left:10px;margin-top:10px;">
