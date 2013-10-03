@@ -25,11 +25,18 @@ echo "</div>";
 function vpn_status() {
     $result=`sudo /root/checkVPN.sh`;
     $html = "&nbsp;<a href='javascript:vpn_cmd(\"vpn_up\");'><img width='24px' height='24px' alt='VPN OFF' title='VPN OFF' style='vertical-align:top;background-color:gray' src='./images/openvpn_off.png'></a>";
-   
+    $vpn_region_used = "zurich"; # default - TODO - should come from whatever is in the drop-down select box!
+
     if (strpos($result, 'up') !== FALSE) {
         $html = "<a href='javascript:vpn_cmd(\"vpn_down\");'><img width='24px' height='24px' alt='VPN ON' title='VPN ON' style='vertical-align:top;' src='./images/openvpn_on.png'></a>";
-    } 
-    return "${html}&nbsp;&nbsp;<a href='https://www.privatetunnel.com/index.php/my-usage-graphs.html?duration=hour&inhibitGraphs=' target='_blank'><img src='./images/popup.gif'></a>";
+        
+        # find out which VPN region being used    
+        $result=`pgrep -fl /usr/sbin/openvpn | awk '{print $4}'`;
+        preg_match('/\/etc\/openvpn\/(.*).conf/', $result, $matches);
+        $vpn_region_used=$matches[1];
+    }
+
+    return "${html}&nbsp;&nbsp;<a href='https://www.privatetunnel.com/index.php/my-usage-graphs.html?duration=year&inhibitGraphs=' target='_blank'><img src='./images/popup.gif'></a><br/>Region:&nbsp;${vpn_region_used}";
 }
 
 function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) {

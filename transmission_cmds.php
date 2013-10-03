@@ -11,8 +11,10 @@ else if (isset($cmd)) vpn_exec($cmd);
 function vpn_exec($vpn_cmd) {
       $cmd = "sudo killall openvpn";
 
+      #TODO - check radiogroup selection for VPN region
+      $vpn_region = "zurich"; # zurich,london,amsterdam
       if ($vpn_cmd == 'vpn_up') {
-        $cmd = "sudo /usr/sbin/openvpn --config /etc/openvpn/amsterdam.conf --script-security 2 --down '/usr/bin/transmission-remote 9092 -tall --stop' --down-pre 2>&1";
+        $cmd = "sudo /usr/sbin/openvpn --config /etc/openvpn/{$vpn_region}.conf --script-security 2 --down '/usr/bin/transmission-remote 9092 -tall --stop' --down-pre 2>&1 > /tmp/openvpn.log";
       }
 
       $result = shell_exec($cmd);
