@@ -9,35 +9,12 @@ transmission_status($rows, $turtle_rate, $bear_rate, $rabbit_rate);
 
 running_torrents($rows, $ids, $finished_ids);
 
-$v_stat = vpn_status();
-echo "<p id='vpn' style='float:left;margin-top:29px;margin-left:-15px;'>";
-echo "{$v_stat}";
-echo "</p>";
-
 echo "<div id='global_cmds' style='float:left;clear:both;margin-top:-25px;margin-left:10px;'><br/>";
 echo "<span style='color:white;vertical-align:top;'> Rate:</span>";
 echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit90\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$turtle_rate};' alt='Slow' title='Slow' src='./images/turtle.png'></a>";
 echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit50\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$bear_rate};' alt='Steady' title='Steady' src='./images/bear.png'></a>";
 echo "&nbsp;&nbsp;<a href='javascript:transmission_cmd(\"limit0\", null);'><img width='24px' height='16px' style='vertical-align:top;background-color:{$rabbit_rate};' alt='Sprint' title='Sprint' src='./images/rabbit.png'></a>";
 echo "</div>";
-
-
-function vpn_status() {
-    $result=`sudo /root/checkVPN.sh`;
-    $html = "&nbsp;<a href='javascript:vpn_cmd(\"vpn_up\");'><img width='24px' height='24px' alt='VPN OFF' title='VPN OFF' style='vertical-align:top;background-color:gray' src='./images/openvpn_off.png'></a>";
-    $vpn_region_used = "zurich"; # default - TODO - should come from whatever is in the drop-down select box!
-
-    if (strpos($result, 'up') !== FALSE) {
-        $html = "<a href='javascript:vpn_cmd(\"vpn_down\");'><img width='24px' height='24px' alt='VPN ON' title='VPN ON' style='vertical-align:top;' src='./images/openvpn_on.png'></a>";
-        
-        # find out which VPN region being used    
-        $result=`pgrep -fl /usr/sbin/openvpn | awk '{print $4}'`;
-        preg_match('/\/etc\/openvpn\/(.*).conf/', $result, $matches);
-        $vpn_region_used=$matches[1];
-    }
-
-    return "${html}&nbsp;&nbsp;<a href='https://www.privatetunnel.com/index.php/my-usage-graphs.html?duration=year&inhibitGraphs=' target='_blank'><img src='./images/popup.gif'></a><br/>Region:&nbsp;${vpn_region_used}";
-}
 
 function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) {
 	`transmission-remote 9092 -l > /tmp/trans-list.txt`;
@@ -85,6 +62,23 @@ function transmission_status(&$rows, &$turtle_rate, &$bear_rate, &$rabbit_rate) 
     }
 }
 
+function vpn_status() {
+    $result=`sudo /root/checkVPN.sh`;
+    $html = "&nbsp;<a href='javascript:vpn_cmd(\"vpn_up\");'><img width='24px' height='24px' alt='VPN OFF' title='VPN OFF' style='vertical-align:top;background-color:gray' src='./images/openvpn_off.png'></a>";
+    $vpn_region_used = "Zurich"; # default - TODO - should come from whatever is in the drop-down select box!
+
+    if (strpos($result, 'up') !== FALSE) {
+        $html = "<a href='javascript:vpn_cmd(\"vpn_down\");'><img width='24px' height='24px' alt='VPN ON' title='VPN ON' style='vertical-align:top;' src='./images/openvpn_on.png'></a>";
+        
+        # find out which VPN region being used    
+        $result=`pgrep -fl /usr/sbin/openvpn | awk '{print $4}'`;
+        preg_match('/\/etc\/openvpn\/(.*).ovpn/', $result, $matches);
+        $vpn_region_used=$matches[1];
+    }
+
+    return "${html}&nbsp;&nbsp;<a href='https://www.privatetunnel.com/index.php/my-usage-graphs.html?duration=year&inhibitGraphs=' target='_blank'><img src='./images/popup.gif'></a>";
+}
+
 function running_torrents($rows, &$ids, &$finished_ids) {
     $id_pattern = "(&nbsp;)+(?<id>\d+|\d+\\*)(&nbsp;)+";
     $percent_pattern = "(?<percentage>\d+%|n\/a)(&nbsp;)+";
@@ -99,9 +93,10 @@ function running_torrents($rows, &$ids, &$finished_ids) {
     $pattern = "/^$id_pattern$percent_pattern$have_pattern$eta_pattern$band_pattern$share_pattern$status_pattern$title_pattern$/";
     
     $i = 0;
+    $vpn_status = vpn_status();
     echo "<table class='running_torrents' style='float:left;clear:both;margin:25px;'>
             <tr style='color:white;'>
-                <th><a href='javascript:display_running_torrents();'><img width='24' height='24' src='./images/running_torrents.png' alt='Action' title='Action'></a></th><th>% Done</th><th>Have</th><th>ETA</th><th>Up (KB/s)</th><th>Down (KB/s)</th><th>Ratio</th><th>Status</th><th>Title</th><th>Delete</th>
+                <th><a href='javascript:display_running_torrents();'><img width='24' height='24' src='./images/running_torrents.png' alt='Action' title='Action'></a></th><th>% Done</th><th>Have</th><th>ETA</th><th>Up (KB/s)</th><th>Down (KB/s)</th><th>Ratio</th><th>Status</th><th>Title</th><th>Delete</th><th>{$vpn_status}</th>
             </tr>";
 
     foreach ($rows as $row) {
@@ -139,10 +134,11 @@ function running_torrents($rows, &$ids, &$finished_ids) {
         $action_icon_id = "<a href='javascript:transmission_cmd(\"{$toggle_cmd}\", \"{$id}\");'><img title='{$toggle_cmd} {$id}' alt='{$toggle_cmd} {$id}' width='16px' height='16px' src='./images/{$toggle_img}'></a>";
         $delete_torrent = "<a href='javascript:transmission_cmd(\"remove\", \"{$id}\");'><img alt='remove {$id}' title='remove {$id}' width='16px' height='16px' src='./images/remove.jpeg'></a>";
 
+        $encoded_title = urlencode($title);
         echo "  <tr style='color:$text_color;'>
                     <td>$action_icon_id</td><td>$percentage</td><td>$have</td><td>$eta</td>
                     <td>$band_up</td><td>$band_down</td><td>$share</td><td>$status</td><td>$title</td>
-                    <td>$delete_torrent</td>
+                    <td>$delete_torrent</td><td><a href='http://www.imdb.com/find?q=$encoded_title' target='_blank'><img style='vertical-align: bottom;'title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a></td>
                 </tr>";
 
         $ids[] = $id;

@@ -12,9 +12,9 @@ function vpn_exec($vpn_cmd) {
       $cmd = "sudo killall openvpn";
 
       #TODO - check radiogroup selection for VPN region
-      $vpn_region = "zurich"; # zurich,london,amsterdam
+      $vpn_region = "Zurich"; # zurich,london,amsterdam
       if ($vpn_cmd == 'vpn_up') {
-        $cmd = "sudo /usr/sbin/openvpn --config /etc/openvpn/{$vpn_region}.conf --script-security 2 --down '/usr/bin/transmission-remote 9092 -tall --stop' --down-pre 2>&1 > /tmp/openvpn.log";
+        $cmd = "sudo /usr/sbin/openvpn --config /etc/openvpn/{$vpn_region}.ovpn --script-security 2 --down '/usr/bin/transmission-remote 9092 -tall --stop' --down-pre 2>&1 > /tmp/openvpn.log";
       }
 
       $result = shell_exec($cmd);

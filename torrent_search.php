@@ -17,7 +17,7 @@ function display_torrent_search($q) {
 
 		echo "<table class='available_torrents' style=''>
 		        <tr>
-		          <th><a target='_blank' href='http://www.imdb.com/find?q={$q}&s=all'><img style='float:right;' title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a>Available Torrents</th><th>Size</th><th>Seeders</th><th>Leechers</th>
+		          <th>Available Torrents</th><th>IMDb</th><th>Size</th><th>Seeders</th><th>Leechers</th>
 		        </tr>";
 
 		if ($results->length == 0) {
@@ -64,6 +64,7 @@ function display_torrent_search($q) {
 			$encoded_name = urlencode($name);
 	    echo "<tr style='background-color:$bkgrd_color;'>
 	    				<td><a href='javascript:add_a_torrent(\"{$hash}\", \"{$encoded_name}\");'>{$name}</a></td>
+	            <td><a href='http://www.imdb.com/find?q=$encoded_name' target='_blank'><img style='vertical-align: bottom;'title='IMDb search' height='24px' width='24px' alt='IMDb search' src='./images/imdb.ico'></a></td>
 	            <td style='font-weight:bold;'>$size</td>
 	            <td>$seeds</td><td>$leech</td>
 	          </tr>";
